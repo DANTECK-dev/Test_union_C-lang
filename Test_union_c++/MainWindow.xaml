@@ -9,7 +9,7 @@
     <Grid>
         <TabControl Margin="0,0,217,0">
             <TabItem Header="Процессы" Height="22" Margin="-2,0,-2,0" VerticalAlignment="Bottom">
-                <Grid Background="#FFE5E5E5">
+                <Grid Background="#FFE5E5E5" Height="451">
                     <Button x:Name="Start_Button" Content="Запустить систему" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="151" Click="Start_Button_Click"/>
                     <Button x:Name="Stop_Button" Content="Остановить систему" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="151" Click="Stop_Button_Click"/>
                     <Label Content="Алгоритм управления процессами" HorizontalAlignment="Left" Margin="166,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.382,-0.403" Height="25" Width="187" FontSize="11"/>
