@@ -98,14 +98,15 @@ void AddLog(char* s, int size)
 }
 
 // -1.6 считать байт из памяти по физ.адресу;
-BYTE ReadMemoryByte(int memPhysAdress)
+BYTE ReadMemoryByte(int &memPhysAdress)
 {
-    return 0;
+    return (BYTE)memPhysAdress;
 }
 
 //1.7 - записать байт в память по физ.адресу;
-void WriteMemoryByte(int memPhysAdress, BYTE value)
+void WriteMemoryByte(int &memPhysAdress, BYTE value)
 {
+    *&memPhysAdress = (int)*&value;
     return;
 }
 
@@ -113,16 +114,29 @@ void WriteMemoryByte(int memPhysAdress, BYTE value)
 //(memPhysAdress - адрес, с которого надо считывать данные, lpBuffer -
 //буфер, в который необходимо перенести указанные данные, count -
 //количество считываемых байт);
-void ReadMemory(int memPhysAdress, BYTE * lpBuffer, int count)
+BYTE* ReadMemory(int &memPhysAdress, int count)
 {
-    return;
+    BYTE* lpBuffer = new BYTE[count];
+
+    for (int i = 0; i < count; i++)
+    {
+        lpBuffer[i] = (BYTE)memPhysAdress;
+        memPhysAdress += sizeof(lpBuffer[i]);
+    }
+
+    return lpBuffer;
 }
 
 //1.9  - записать в памяти из указанного буфера несколько байт
 //(memPhysAdress - адрес, по которому происходит запись, lpBuffer -
 //буфер, из которого переносятся данные, count - количество байт);
-void WriteMemory(int memPhysAdress, BYTE * lpBuffer, int count)
+void WriteMemory(int &memPhysAdress, BYTE * lpBuffer, int count)
 {
+    for (int i = 0; i < count; i++)
+    {
+        *&memPhysAdress = (int)*&lpBuffer[i];
+        memPhysAdress += sizeof(lpBuffer[i]);
+    }
     return;
 }
 

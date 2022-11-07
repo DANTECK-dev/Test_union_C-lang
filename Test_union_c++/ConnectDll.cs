@@ -56,24 +56,24 @@ namespace ConnectDLL
 
         [DllImport("MathLibrary.dll")]
         //1.6  -считать байт из памяти по физ.адресу;
-        internal static extern Byte ReadMemoryByte(int memPhysAdress);
+        internal static extern Byte ReadMemoryByte(ref int memPhysAdress);
 
         [DllImport("MathLibrary.dll")]
         //1.7 - записать байт в память по физ.адресу;
-        internal static extern void WriteMemoryByte(int memPhysAdress, Byte value);
+        internal static extern void WriteMemoryByte(ref int memPhysAdress, Byte value);
 
         [DllImport("MathLibrary.dll")]
         //1.8 - считать из памяти по указанному физ.адресу несколько байт
         //(memPhysAdress - адрес, с которого надо считывать данные, lpBuffer -
         //буфер, в который необходимо перенести указанные данные, count -
         //количество считываемых байт);
-        internal static extern void ReadMemory(int memPhysAdress, Byte[] lpBuffer, int count);
+        internal static extern Byte[] ReadMemory(ref int memPhysAdress, Byte[] lpBuffer, int count);
 
         [DllImport("MathLibrary.dll")]
         //1.9  - записать в памяти из указанного буфера несколько байт
         //(memPhysAdress - адрес, по которому происходит запись, lpBuffer -
         //буфер, из которого переносятся данные, count - количество байт);
-        internal static extern void WriteMemory(int memPhysAdress, Byte[] lpBuffer, int count);
+        internal static extern void WriteMemory(ref int memPhysAdress, Byte[] lpBuffer, int count);
 
         [DllImport("MathLibrary.dll")]
         //1.10  - считать кластер

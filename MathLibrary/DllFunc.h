@@ -79,21 +79,21 @@ extern "C" DLLFUNC_API uint64_t GetSectorSize();
 extern "C" DLLFUNC_API void AddLog(char* s, int size);
 
 //1.6  -считать байт из памяти по физ.адресу;
-extern "C" DLLFUNC_API BYTE ReadMemoryByte(int memPhysAdress);
+extern "C" DLLFUNC_API BYTE ReadMemoryByte(int &memPhysAdress);
 
 //1.7 - записать байт в память по физ.адресу;
-extern "C" DLLFUNC_API void WriteMemoryByte(int memPhysAdress, BYTE value);
+extern "C" DLLFUNC_API void WriteMemoryByte(int &memPhysAdress, BYTE value);
 
 //1.8 - считать из памяти по указанному физ.адресу несколько байт
 //(memPhysAdress - адрес, с которого надо считывать данные, lpBuffer -
 //буфер, в который необходимо перенести указанные данные, count -
 //количество считываемых байт);
-extern "C" DLLFUNC_API void ReadMemory(int memPhysAdress, BYTE* lpBuffer, int count);
+extern "C" DLLFUNC_API BYTE* ReadMemory(int &memPhysAdress, BYTE* lpBuffer, int count);
 
 //1.9  - записать в памяти из указанного буфера несколько байт
 //(memPhysAdress - адрес, по которому происходит запись, lpBuffer -
 //буфер, из которого переносятся данные, count - количество байт);
-extern "C" DLLFUNC_API void WriteMemory(int memPhysAdress, BYTE* lpBuffer, int count);
+extern "C" DLLFUNC_API void WriteMemory(int &memPhysAdress, BYTE* lpBuffer, int count);
 
 //1.10  - считать кластер
 //с диска(внимание, функция блокирующая), параметры: memAdress -
