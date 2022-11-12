@@ -113,7 +113,11 @@
                             </GroupBox>
 
                         </Grid>
-                        <DataGrid x:Name="Process_DataGrid" Margin="5" Grid.Column="1"/>
+                        <DataGrid x:Name="Process_DataGrid" Margin="5" Grid.Column="1">
+                            <DataGrid.Columns>
+                                
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                     <StatusBar x:Name="Process_StatusBar" Grid.Row="2">
                         <StatusBarItem Content="Калькулятор: 0.0"/>

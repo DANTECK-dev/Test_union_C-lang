@@ -72,15 +72,15 @@ namespace Test_union_c__
             //{
             //    for(int j = 0; j < 50; j++)
             //    {
-                    Process_DataGrid.Items.Add(new DataGridItem() { Column = 2, Row = 2, Data = "test" });
-                    //Memory_Process_DataGrid.Items.Add(i);
-                    //Disk_Sector_DataGrid.Items.Add(i);
-                    //Disk_Map_DataGrid.Items.Add(i);
-                    //Disk_Catalog_DataGrid.Items.Add(i);
-                    //Memory_Address_DataGrid.Items.Add(i);
-                    //Memory_Map_DataGrid.Items.Add(i);
-                    //Memory_Process_DataGrid.Items.Add(i);
-                    //Process_DataGrid.Items.Add(i);
+            Process_DataGrid.Items.Add("test");
+            Process_DataGrid.Items.Add("test");
+            Memory_Process_DataGrid.Items.Add("test");
+            Memory_Process_DataGrid.Items.Add("test");
+            Disk_Sector_DataGrid.Items.Add("test");
+            Disk_Map_DataGrid.Items.Add("test");
+            Disk_Catalog_DataGrid.Items.Add("test");
+            Memory_Address_DataGrid.Items.Add("test");
+            Memory_Map_DataGrid.Items.Add("test");
             //    }
             //}
         }
