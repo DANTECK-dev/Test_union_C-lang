@@ -36,6 +36,13 @@ namespace Test_union_c__
         bool Selected_VSU_control_algorithm = false;
         bool Started = false;
 
+        internal class Process
+        {
+            public string? Number { get; set; }
+            public string? ProcessData { get; set; }
+            public string? AddressSpace { get; set; }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -48,7 +55,7 @@ namespace Test_union_c__
 
             DLL.WriteMemoryByte(ref p, value);
 
-            MessageBox.Show(DLL.ReadMemoryByte(ref p).ToString());
+            //MessageBox.Show(DLL.ReadMemoryByte(ref p).ToString());
             
             Initialize_DataGrid();
 
@@ -59,28 +66,34 @@ namespace Test_union_c__
 
         private void Initialize_DataGrid()
         {
-            Memory_Process_DataGrid.Items.Clear();
-            Disk_Sector_DataGrid.Items.Clear();
-            Disk_Map_DataGrid.Items.Clear();
-            Disk_Catalog_DataGrid.Items.Clear();
-            Memory_Address_DataGrid.Items.Clear();
-            Memory_Map_DataGrid.Items.Clear();
-            Memory_Process_DataGrid.Items.Clear();
-            Process_DataGrid.Items.Clear();
+            List<Process> processes = new List<Process>();
+            for(int i = 0; i < 10; i++)
+            {
+                processes.Add(new Process() { Number = i.ToString(), ProcessData = "Process_Data", AddressSpace = "Address_Space" });
+            }
+            Process_DataGrid.ItemsSource = processes;
+            //Memory_Process_DataGrid.Items.Clear();
+            //Disk_Sector_DataGrid.Items.Clear();
+            //Disk_Map_DataGrid.Items.Clear();
+            //Disk_Catalog_DataGrid.Items.Clear();
+            //Memory_Address_DataGrid.Items.Clear();
+            //Memory_Map_DataGrid.Items.Clear();
+            //Memory_Process_DataGrid.Items.Clear();
+            //Process_DataGrid.Items.Clear();
 
-            //for (int i = 0; i < 50; i++)
-            //{
-            //    for(int j = 0; j < 50; j++)
-            //    {
-            Process_DataGrid.Items.Add("test");
-            Process_DataGrid.Items.Add("test");
-            Memory_Process_DataGrid.Items.Add("test");
-            Memory_Process_DataGrid.Items.Add("test");
-            Disk_Sector_DataGrid.Items.Add("test");
-            Disk_Map_DataGrid.Items.Add("test");
-            Disk_Catalog_DataGrid.Items.Add("test");
-            Memory_Address_DataGrid.Items.Add("test");
-            Memory_Map_DataGrid.Items.Add("test");
+            ////for (int i = 0; i < 50; i++)
+            ////{
+            ////    for(int j = 0; j < 50; j++)
+            ////    {
+            //Process_DataGrid.Items.Add("test");
+            //Process_DataGrid.Items.Add("test");
+            //Memory_Process_DataGrid.Items.Add("test");
+            //Memory_Process_DataGrid.Items.Add("test");
+            //Disk_Sector_DataGrid.Items.Add("test");
+            //Disk_Map_DataGrid.Items.Add("test");
+            //Disk_Catalog_DataGrid.Items.Add("test");
+            //Memory_Address_DataGrid.Items.Add("test");
+            //Memory_Map_DataGrid.Items.Add("test");
             //    }
             //}
         }
@@ -275,4 +288,6 @@ namespace Test_union_c__
             else Start_Button.IsEnabled = false;
         }
     }
+
+
 }

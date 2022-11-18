@@ -30,9 +30,9 @@
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="169*"></ColumnDefinition>
-                            <ColumnDefinition Width="226*"></ColumnDefinition>
-                            <ColumnDefinition Width="424*"></ColumnDefinition>
+                            <ColumnDefinition Width="169"></ColumnDefinition>
+                            <ColumnDefinition Width="226"></ColumnDefinition>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Button x:Name="Start_Button" IsEnabled="false" Content="Запустить систему" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="auto" Height="auto" MinWidth="120" MinHeight="20" Click="Start_Button_Click"/>
                         <Button x:Name="Stop_Button" IsEnabled="false" Grid.Row="1" Content="Остановить систему" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="auto" Height="auto" MinWidth="120" MinHeight="20" Click="Stop_Button_Click"/>
@@ -113,11 +113,7 @@
                             </GroupBox>
 
                         </Grid>
-                        <DataGrid x:Name="Process_DataGrid" Margin="5" Grid.Column="1">
-                            <DataGrid.Columns>
-                                
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <DataGrid x:Name="Process_DataGrid" Margin="5" Grid.Column="1" CanUserAddRows="False" CanUserReorderColumns ="False" SelectionMode="Single" EnableColumnVirtualization="True" AutomationProperties.IsRowHeader="True" AutomationProperties.IsColumnHeader="True" IsReadOnly="True"/>
                     </Grid>
                     <StatusBar x:Name="Process_StatusBar" Grid.Row="2">
                         <StatusBarItem Content="Калькулятор: 0.0"/>
