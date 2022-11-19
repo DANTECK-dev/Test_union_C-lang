@@ -113,7 +113,15 @@
                             </GroupBox>
 
                         </Grid>
-                        <DataGrid x:Name="Process_DataGrid" Margin="5" Grid.Column="1" CanUserAddRows="False" CanUserReorderColumns ="False" SelectionMode="Single" EnableColumnVirtualization="True" AutomationProperties.IsRowHeader="True" AutomationProperties.IsColumnHeader="True" IsReadOnly="True"/>
+                        <DataGrid x:Name="Process_DataGrid" HeadersVisibility="All" RowHeaderWidth="25" Margin="5" Grid.Column="1" CanUserAddRows="False" CanUserReorderColumns ="False" SelectionMode="Single" EnableColumnVirtualization="True" AutomationProperties.IsRowHeader="True" AutomationProperties.IsColumnHeader="True" IsReadOnly="True" LoadingRow="Process_DataGrid_LoadingRow">
+
+                            <DataGrid.RowStyle>
+                                <Style TargetType="{x:Type DataGridRow}">
+                                    <Setter Property="IsSelected" Value="{Binding IsRowSelected}" />
+                                    <Setter Property="Header" Value="{Binding Content}" />
+                                </Style>
+                            </DataGrid.RowStyle>
+                        </DataGrid>
                     </Grid>
                     <StatusBar x:Name="Process_StatusBar" Grid.Row="2">
                         <StatusBarItem Content="Калькулятор: 0.0"/>
@@ -159,8 +167,8 @@
                                 <ColumnDefinition Width="10*"/>
                             </Grid.ColumnDefinitions>
                             <Label Content="Адрес" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBox x:Name="Address_TextBox" Grid.Column="1" Text="0" IsEnabled="false" TextAlignment="Center" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-                            <Button x:Name="Address_Increment_Button" IsEnabled="false" FontFamily="Marlett" FontSize="20" Content="5" Grid.Column="2" Click="Address_Increment_Button_Click"/>
+                            <TextBox x:Name="Address_TextBox" Grid.Column="1" Text="0" IsEnabled="false" TextAlignment="Center" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextChanged="Address_TextBox_TextChanged" />
+                            <Button x:Name="Address_Increment_Button" IsEnabled="false" FontFamily="Marlett" FontSize="20" Content="5" Grid.Column="2" Click="Address_Increment_Button_Click" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="26"/>
                             <Button x:Name="Address_Decrement_Button" IsEnabled="false" FontFamily="Marlett" FontSize="20" Content="6" Grid.Column="3" HorizontalAlignment="Left" Width="25" Click="Address_Decrement_Button_Click"/>
                             <Button x:Name="Address_Content_Button" IsEnabled="false" Content="Содержимое" Grid.Column="5" Click="Address_Content_Button_Click"/>
                         </Grid>
@@ -249,7 +257,7 @@
                                 <ColumnDefinition Width="10*"/>
                             </Grid.ColumnDefinitions>
                             <Label Content="Сектор" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBox x:Name="Sector_TextBox" Grid.Column="1" Text="0" IsEnabled="false" TextAlignment="Center" />
+                            <TextBox x:Name="Sector_TextBox" Grid.Column="1" Text="0" IsEnabled="false" TextAlignment="Center" TextChanged="Sector_TextBox_TextChanged" />
                             <Button x:Name="Sector_Increment_Button" IsEnabled="false" FontFamily="Marlett" FontSize="20" Content="5" Grid.Column="2" Click="Sector_Increment_Button_Click"/>
                             <Button x:Name="Sector_Decrement_Button" IsEnabled="false" FontFamily="Marlett" FontSize="20" Content="6" Grid.Column="3" Click="Sector_Decrement_Button_Click"/>
                             <Button x:Name="Sector_Content_Button" IsEnabled="false" Content="Содержимое" Grid.Column="5" Click="Sector_Content_Button_Click"/>

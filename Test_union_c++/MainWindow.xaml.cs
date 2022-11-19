@@ -15,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime;
 using ConnectDLL;
+using System.Data;
+using System.Reflection;
 
 namespace Test_union_c__
 {
@@ -36,18 +38,68 @@ namespace Test_union_c__
         bool Selected_VSU_control_algorithm = false;
         bool Started = false;
 
+        DataTable employeeDataTable = new DataTable();
+
         internal class Process
         {
-            public string? Number { get; set; }
             public string? ProcessData { get; set; }
             public string? AddressSpace { get; set; }
+        }
+        public static class DataGridHelper
+        {
+            public static DataGridCell FindCell(int iRow, int iColumn, DataGrid dg)
+            {
+                return GetCell(new DataGridCellInfo(dg.Items[iRow], dg.Columns[iColumn]));
+            }
+
+            public static DataGridCell GetCell(DataGridCellInfo dataGridCellInfo)
+            {
+                if (!dataGridCellInfo.IsValid)
+                {
+                    return null;
+                }
+
+                var cellContent = dataGridCellInfo.Column.GetCellContent(dataGridCellInfo.Item);
+                if (cellContent != null)
+                {
+                    return (DataGridCell)cellContent.Parent;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            public static int GetRowIndex(DataGridCell dataGridCell)
+            {
+                // Use reflection to get DataGridCell.RowDataItem property value.
+                PropertyInfo rowDataItemProperty = dataGridCell.GetType().GetProperty("RowDataItem", BindingFlags.Instance | BindingFlags.NonPublic);
+
+                DataGrid dataGrid = GetDataGridFromChild(dataGridCell);
+
+                return dataGrid.Items.IndexOf(rowDataItemProperty.GetValue(dataGridCell, null));
+            }
+            public static DataGrid GetDataGridFromChild(DependencyObject dataGridPart)
+            {
+                if (VisualTreeHelper.GetParent(dataGridPart) == null)
+                {
+                    throw new NullReferenceException("Control is null.");
+                }
+                if (VisualTreeHelper.GetParent(dataGridPart) is DataGrid)
+                {
+                    return (DataGrid)VisualTreeHelper.GetParent(dataGridPart);
+                }
+                else
+                {
+                    return GetDataGridFromChild(VisualTreeHelper.GetParent(dataGridPart));
+                }
+            }
         }
 
         public MainWindow()
         {
             InitializeComponent();
             Process_control_algorithm_comboBox.Items.Add("5. Многоуровневая очередь (2 уровня: высокий приоритет – Round robin, низкий приоритет – FCFS)");
-            Memory_control_algorithm_comboBox.Items.Add("3. Страничное распределение памяти (страница – 1024 байт) ");
+            Memory_control_algorithm_comboBox.Items.Add("3. Страничное распределение памяти (страница – 1024 байт)");
             VSU_control_algorithm_comboBox.Items.Add("2. Непрерывное размещение файлов (Кластер – 512 байт)");
 
             int p = new int();
@@ -66,12 +118,59 @@ namespace Test_union_c__
 
         private void Initialize_DataGrid()
         {
-            List<Process> processes = new List<Process>();
-            for(int i = 0; i < 10; i++)
+
+            //var _ds = new DataSet("Test");
+
+            //employeeDataTable = _ds.Tables.Add("DT");
+            //for (int i = 0; i < 10; i++)//create columns
+            //{
+            //    employeeDataTable.Columns.Add(i.ToString());
+            //}
+
+            //for (int i = 0; i < 50; i++)//fill data to rows
+            //{
+            //    var theRow = employeeDataTable.NewRow();
+            //    for (int j = 0; j < 10; j++)
+            //    {
+            //        if (j % 2 == 0)
+            //            theRow[j] = "a";
+            //        else
+            //            theRow[j] = "b";
+            //    }
+            //    employeeDataTable.Rows.Add(theRow);
+            //}
+            //Process_DataGrid.ItemsSource = employeeDataTable.AsDataView();
+
+            DataGridTextColumn ProcessData = new DataGridTextColumn();
+            ProcessData.Header = "Данные\nпроцесса";
+            ProcessData.Binding = new Binding("ProcessData");
+            ProcessData.MinWidth = 65;
+            Process_DataGrid.Columns.Add(ProcessData);
+
+            DataGridTextColumn AddressSpace = new DataGridTextColumn();
+            AddressSpace.Header = "Адрс.\nпро-во";
+            AddressSpace.Binding = new Binding("AddressSpace");
+            AddressSpace.MinWidth = 50;
+            Process_DataGrid.Columns.Add(AddressSpace);
+
+            for(int i = 0; i < 50; i++)
             {
-                processes.Add(new Process() { Number = i.ToString(), ProcessData = "Process_Data", AddressSpace = "Address_Space" });
+                DataGridTextColumn num = new DataGridTextColumn();
+                num.Header = i+1;
+                num.Binding = new Binding((i+1).ToString());
+                Process_DataGrid.Columns.Add(num);
             }
-            Process_DataGrid.ItemsSource = processes;
+
+            List<Process> processes = new List<Process>();
+            for (int i = 0; i < 10; i++)
+            {
+                processes.Add(new Process() { ProcessData = "12345", AddressSpace = "78564" });
+            }
+            Process_DataGrid.Items.Add(processes[0]);
+
+
+
+            //Process_DataGrid.ItemsSource = processes;
             //Memory_Process_DataGrid.Items.Clear();
             //Disk_Sector_DataGrid.Items.Clear();
             //Disk_Map_DataGrid.Items.Clear();
@@ -80,24 +179,11 @@ namespace Test_union_c__
             //Memory_Map_DataGrid.Items.Clear();
             //Memory_Process_DataGrid.Items.Clear();
             //Process_DataGrid.Items.Clear();
-
-            ////for (int i = 0; i < 50; i++)
-            ////{
-            ////    for(int j = 0; j < 50; j++)
-            ////    {
-            //Process_DataGrid.Items.Add("test");
-            //Process_DataGrid.Items.Add("test");
-            //Memory_Process_DataGrid.Items.Add("test");
-            //Memory_Process_DataGrid.Items.Add("test");
-            //Disk_Sector_DataGrid.Items.Add("test");
-            //Disk_Map_DataGrid.Items.Add("test");
-            //Disk_Catalog_DataGrid.Items.Add("test");
-            //Memory_Address_DataGrid.Items.Add("test");
-            //Memory_Map_DataGrid.Items.Add("test");
-            //    }
-            //}
         }
-
+        void Process_DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
         private void Reverse_IsEnabled()
         {
             Start_Button.IsEnabled                          = !Start_Button.IsEnabled;
@@ -203,15 +289,38 @@ namespace Test_union_c__
         {
             ADD_LOG("Memory recording button click");
         }
+        private void Sector_TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ADD_LOG("Sector changed");
+            Sector_TextBox.Text = string.Join("", Sector_TextBox.Text.Where(c => char.IsDigit(c)));
+        }
 
         private void Sector_Increment_Button_Click(object sender, RoutedEventArgs e)
         {
             ADD_LOG("Sector increment button click");
+            string str = string.Join("", Sector_TextBox.Text.Where(c => char.IsDigit(c)));
+            if (int.TryParse(str, out _))
+            {
+                Sector_TextBox.Text = (int.Parse(str) + 1).ToString();
+            }
+            else
+            {
+                MessageBox.Show("В поле сектор должно быть число", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Sector_Decrement_Button_Click(object sender, RoutedEventArgs e)
         {
             ADD_LOG("Sector decrement button click");
+            string str = string.Join("", Sector_TextBox.Text.Where(c => char.IsDigit(c)));
+            if (int.TryParse(str, out _))
+            {
+                Sector_TextBox.Text = (int.Parse(str) - 1).ToString();
+            }
+            else
+            {
+                MessageBox.Show("В поле сектор должно быть число", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Sector_Content_Button_Click(object sender, RoutedEventArgs e)
@@ -239,14 +348,38 @@ namespace Test_union_c__
             ADD_LOG("Edit file button click");
         }
 
+        private void Address_TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ADD_LOG("Address changed");
+            Address_TextBox.Text = string.Join("", Address_TextBox.Text.Where(c => char.IsDigit(c)));
+        }
+
         private void Address_Increment_Button_Click(object sender, RoutedEventArgs e)
         {
             ADD_LOG("Address increment button click");
+            string str = string.Join("", Address_TextBox.Text.Where(c => char.IsDigit(c)));
+            if (int.TryParse(str, out _))
+            {
+                Address_TextBox.Text = (int.Parse(str) + 1).ToString();
+            }
+            else
+            {
+                MessageBox.Show("В поле адресс должно быть число", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Address_Decrement_Button_Click(object sender, RoutedEventArgs e)
         {
             ADD_LOG("Address decrement button click");
+            string str = string.Join("", Address_TextBox.Text.Where(c => char.IsDigit(c)));
+            if (int.TryParse(str, out _))
+            {
+                Address_TextBox.Text = (int.Parse(str) - 1).ToString();
+            }
+            else
+            {
+                MessageBox.Show("В поле адресс должно быть число", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Address_Content_Button_Click(object sender, RoutedEventArgs e)
@@ -256,9 +389,12 @@ namespace Test_union_c__
 
         private void ADD_LOG(string message)
         {
-            DLL.AddLog(message.ToCharArray(), message.Length);
-            Log_ListBox.Items.Add(message);
-            Log_ListBox.ScrollIntoView(Log_ListBox.Items[Log_ListBox.Items.Count - 1]);
+            if(Log_ListBox != null)
+            {
+                DLL.AddLog(message.ToCharArray(), message.Length);
+                Log_ListBox.Items.Add(message);
+                Log_ListBox.ScrollIntoView(Log_ListBox.Items[Log_ListBox.Items.Count - 1]);
+            }
         }
 
         private void VSU_control_algorithm_comboBox_DropDownClosed(object sender, EventArgs e)
@@ -288,6 +424,4 @@ namespace Test_union_c__
             else Start_Button.IsEnabled = false;
         }
     }
-
-
 }
