@@ -67,7 +67,7 @@ namespace ConnectDLL
         //(memPhysAdress - адрес, с которого надо считывать данные, lpBuffer -
         //буфер, в который необходимо перенести указанные данные, count -
         //количество считываемых байт);
-        internal static extern Byte[] ReadMemory(ref int memPhysAdress, Byte[] lpBuffer, int count);
+        internal static extern Byte[] ReadMemory(ref int memPhysAdress, int count);
 
         [DllImport("MathLibrary.dll")]
         //1.9  - записать в памяти из указанного буфера несколько байт

@@ -103,20 +103,20 @@ namespace Test_union_c__
             VSU_control_algorithm_comboBox.Items.Add("2. Непрерывное размещение файлов (Кластер – 512 байт)");
 
             int p = new int();
-            Byte value = 12;
+            Byte[] value = {12, 13, 2};
 
-            DLL.WriteMemoryByte(ref p, value);
+            DLL.WriteMemory(ref p, value, 3);
 
-            //MessageBox.Show(DLL.ReadMemoryByte(ref p).ToString());
+            MessageBox.Show(DLL.ReadMemory(ref p, 3)[2].ToString());
             
-            Initialize_DataGrid();
+            Initialize_DataGrids();
 
             //Process_StatusBar.Items.Add(new Separator());
             //Process_StatusBar.Items.Add("hui");
             //MessageBox.Show(DLL.GetSectorSize().ToString());
         }
 
-        private void Initialize_DataGrid()
+        private void Initialize_DataGrids()
         {
 
             //var _ds = new DataSet("Test");

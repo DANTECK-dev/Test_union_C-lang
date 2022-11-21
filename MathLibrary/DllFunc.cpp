@@ -116,6 +116,7 @@ void WriteMemoryByte(int &memPhysAdress, BYTE value)
 //количество считываемых байт);
 BYTE* ReadMemory(int &memPhysAdress, int count)
 {
+    ReadProcessMemory()
     BYTE* lpBuffer = new BYTE[count];
 
     for (int i = 0; i < count; i++)

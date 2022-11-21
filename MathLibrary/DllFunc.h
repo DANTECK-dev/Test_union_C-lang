@@ -88,7 +88,7 @@ extern "C" DLLFUNC_API void WriteMemoryByte(int &memPhysAdress, BYTE value);
 //(memPhysAdress - адрес, с которого надо считывать данные, lpBuffer -
 //буфер, в который необходимо перенести указанные данные, count -
 //количество считываемых байт);
-extern "C" DLLFUNC_API BYTE* ReadMemory(int &memPhysAdress, BYTE* lpBuffer, int count);
+extern "C" DLLFUNC_API BYTE* ReadMemory(int &memPhysAdress, int count);
 
 //1.9  - записать в памяти из указанного буфера несколько байт
 //(memPhysAdress - адрес, по которому происходит запись, lpBuffer -
