@@ -16,6 +16,8 @@
 #include <string.h>
 #include <shlobj.h>
 #include <windows.h>
+//#include <sys/ipc.h>
+//#include <sys/sem.h> 
 
 #pragma comment(lib, "shell32.lib")
 

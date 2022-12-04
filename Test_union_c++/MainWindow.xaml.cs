@@ -1,4 +1,5 @@
 ﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,9 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime;
-using ConnectDLL;
 using System.Data;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Test_union_c__
 {
@@ -24,14 +25,7 @@ namespace Test_union_c__
     /// Interaction logic for MainWindow.xaml
     /// </summary>
 
-    public class DataGridItem
-    {
-        public int Column { get; set; }
-        public int Row { get; set; }
-        public string Data { get; set; }
-    }
-
-    public partial class MainWindow : Window
+    unsafe public partial class MainWindow : Window
     {
         bool Selected_Process_control_algorithm = false;
         bool Selected_Memory_control_algorithm = false;
@@ -40,60 +34,7 @@ namespace Test_union_c__
 
         DataTable employeeDataTable = new DataTable();
 
-        internal class Process
-        {
-            public string? ProcessData { get; set; }
-            public string? AddressSpace { get; set; }
-        }
-        public static class DataGridHelper
-        {
-            public static DataGridCell FindCell(int iRow, int iColumn, DataGrid dg)
-            {
-                return GetCell(new DataGridCellInfo(dg.Items[iRow], dg.Columns[iColumn]));
-            }
-
-            public static DataGridCell GetCell(DataGridCellInfo dataGridCellInfo)
-            {
-                if (!dataGridCellInfo.IsValid)
-                {
-                    return null;
-                }
-
-                var cellContent = dataGridCellInfo.Column.GetCellContent(dataGridCellInfo.Item);
-                if (cellContent != null)
-                {
-                    return (DataGridCell)cellContent.Parent;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            public static int GetRowIndex(DataGridCell dataGridCell)
-            {
-                // Use reflection to get DataGridCell.RowDataItem property value.
-                PropertyInfo rowDataItemProperty = dataGridCell.GetType().GetProperty("RowDataItem", BindingFlags.Instance | BindingFlags.NonPublic);
-
-                DataGrid dataGrid = GetDataGridFromChild(dataGridCell);
-
-                return dataGrid.Items.IndexOf(rowDataItemProperty.GetValue(dataGridCell, null));
-            }
-            public static DataGrid GetDataGridFromChild(DependencyObject dataGridPart)
-            {
-                if (VisualTreeHelper.GetParent(dataGridPart) == null)
-                {
-                    throw new NullReferenceException("Control is null.");
-                }
-                if (VisualTreeHelper.GetParent(dataGridPart) is DataGrid)
-                {
-                    return (DataGrid)VisualTreeHelper.GetParent(dataGridPart);
-                }
-                else
-                {
-                    return GetDataGridFromChild(VisualTreeHelper.GetParent(dataGridPart));
-                }
-            }
-        }
+        List<Process> processList = new List<Process>();
 
         public MainWindow()
         {
@@ -105,9 +46,9 @@ namespace Test_union_c__
             int p = new int();
             Byte[] value = {12, 13, 2};
 
-            DLL.WriteMemory(ref p, value, 3);
+            //DLL.WriteMemory(ref p, value, 3);
 
-            MessageBox.Show(DLL.ReadMemory(ref p, 3)[2].ToString());
+            //MessageBox.Show(DLL.ReadMemory(ref p, 3)[2].ToString());
             
             Initialize_DataGrids();
 
@@ -118,6 +59,14 @@ namespace Test_union_c__
 
         private void Initialize_DataGrids()
         {
+            //Process process = new Process();
+            //process.StartInfo.FileName = "zxc.exe";
+            //process.StartInfo.Arguments = "-n";
+            //process.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
+            //process.Start();
+            //process.WaitForExit();// Waits here for the process to exit.
+
+
 
             //var _ds = new DataSet("Test");
 
@@ -161,13 +110,23 @@ namespace Test_union_c__
                 Process_DataGrid.Columns.Add(num);
             }
 
-            List<Process> processes = new List<Process>();
-            for (int i = 0; i < 10; i++)
-            {
-                processes.Add(new Process() { ProcessData = "12345", AddressSpace = "78564" });
-            }
-            Process_DataGrid.Items.Add(processes[0]);
+            //List<nProcess> processes1 = new List<nProcess>();
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    processes1.Add(new nProcess() { ProcessData = "12345", AddressSpace = "78564" });
+            //}
+            //Process_DataGrid.Items.Add(processes1[0]);
 
+            ProcessStartInfo procInfo = new ProcessStartInfo();
+            // исполняемый файл программы - браузер хром
+            procInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome";
+            // аргументы запуска - адрес интернет-ресурса
+            procInfo.Arguments = "https://metanit.com";
+            Process.Start(procInfo);
+
+            var processes = Process.GetProcessesByName("Idle");
+            foreach (Process process in processes)
+                Process_DataGrid.Items.Add(new nProcess() { ProcessData = process.ProcessName, AddressSpace = process.Id});
 
 
             //Process_DataGrid.ItemsSource = processes;

@@ -5,29 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConnectDLL
+namespace Test_union_c__
 {
-    // структура для описания состояния физ. памяти
-    struct PHYS_MEMORY_BLOCK
+    unsafe static class DLL
     {
-        int nStart; // начало блока в оперативной памяти
-        int nLength; // длина блока
-        int nProcess; // номер процесса (0-99), которому выделен блок (255 - система)
-    };
-    enum PROCESS_STATUS
-    {
-        NotExist = 0,
-        Execute = 1,
-        Ready = 2,
-        Wait = 3
-    };
-    enum MEMORY_OPERATION
-    {
-        MemoryRead = 0,
-        MemoryWrite = 1
-    };
-    static class DLL
-    {
+
         [DllImport("MathLibrary.dll")]
         /*
             1. Аппаратные функции - данные функции реализованы с модели
@@ -35,7 +17,7 @@ namespace ConnectDLL
             виртуальной машине :
         */
 
-        // - 1.1 получить размер оперативной памяти(в байтах);
+        //1.1 - получить размер оперативной памяти(в байтах);
         internal static extern ulong GetMemorySize();
 
         [DllImport("MathLibrary.dll")]
@@ -51,11 +33,11 @@ namespace ConnectDLL
         internal static extern ulong GetSectorSize();
 
         [DllImport("MathLibrary.dll")]
-        //1.5  -записать строку в лог(не более 40К за 500 мс);
+        //1.5 - записать строку в лог(не более 40К за 500 мс);
         internal static extern void AddLog(char[] s, int size);
 
         [DllImport("MathLibrary.dll")]
-        //1.6  -считать байт из памяти по физ.адресу;
+        //1.6 - считать байт из памяти по физ.адресу;
         internal static extern Byte ReadMemoryByte(ref int memPhysAdress);
 
         [DllImport("MathLibrary.dll")]
@@ -141,7 +123,7 @@ namespace ConnectDLL
         //файлов, lpFirstSectors - номера первых кластеров, lpSizes - размеры
         //файлов;
         internal static extern void GetDiskCatalog(char[][] lpFileNames, int[] lpFirstSectors, int[] lpSizes);
-        
+
         [DllImport("MathLibrary.dll")]
         //3.6 - создать процесс, nData -
         //дополнительные параметры для процесса(зависит от алгоритма
@@ -172,7 +154,7 @@ namespace ConnectDLL
         //bBlockCount всегда равен 1, для сегментного и сегментностраничного распределения - количество сегментов, lpBlockLength
         //- длины блоков аресного пространства;
         internal static extern void osMakeAddressSpace(int nProcess, int bBlockCount, int[] lpBlockLength);
-        
+
         [DllImport("MathLibrary.dll")]
         //4.2  - выполнить трансляцию адреса, nProcess - номер
         //процесса, в адресном пространстве которого выполняется
@@ -183,7 +165,7 @@ namespace ConnectDLL
         //если необходимая часть адресного пространства отсутствует в
         //оперативной памяти;
         internal static extern int osTranslateAddress(int nProcess, int nVirtualAdress, int nOperationType);
-        
+
         [DllImport("MathLibrary.dll")]
         //4.3  - выполнить трансляцию адреса,
         //nProcess - номер процесса, в адресном пространстве которого
@@ -194,7 +176,7 @@ namespace ConnectDLL
         //вернуть номер физ.ячейки или - 1 если необходимая часть
         //адресного пространства отсутствует в оперативной памяти;
         internal static extern int osTranslateAddress2(int nProcess, int nSegment, int nOffset, int nOperationType);
-        
+
         [DllImport("MathLibrary.dll")]
         /*
             5. Функции ОС, управление вводом / выводом - прототипы функций, которые
@@ -210,14 +192,14 @@ namespace ConnectDLL
         //запись, offset - позиция в файле, с которой необходимо
         //осуществлять запись, возвращает 1 - если успех - 1 - если ошибка;
         internal static extern int osWriteFile(int nProcess, char[] fileName, int virtMemBuffer, int count, int offset);
-        
+
         [DllImport("MathLibrary.dll")]
         //5.2  - запись данных в файл из указанного внешнего буфера,
         //fileName - имя файла(не более 20 символов), lpBuffer - адрес
         //буфера с данными, count - длина буфера на запись, возвращает 1 -
         //если успех - 1 - если ошибка;
         internal static extern int osWriteExternFile(char[] fileName, Byte[] lpBuffer, int count);
-        
+
         [DllImport("MathLibrary.dll")]
         //5.3  - чтение из файла данных в
         //оперативную память, nProcess - номер процесса(0 - 99), вызвавший
@@ -228,14 +210,14 @@ namespace ConnectDLL
         //файле, с которой необходимо осуществлять чтение, возвращает
         //количество прочитанных символов - 1 - если ошибка
         internal static extern int osReadFile(int nProcess, char[] fileName, int virtMemBuffer, int count, int offset);
-        
+
         [DllImport("MathLibrary.dll")]
         //5.4  - чтение из файла данных в указанный внешний буфер,
         //fileName - имя файла(не более 20 символов), lpBuffer - адрес
         //буфера с данными, count - длина буфера на для данных, возвращает
         //количество прочитанных символов - 1 - если ошибка;
         internal static extern int osReadExternFile(char[] fileName, Byte[] lpBuffer, int count);
-        
+
         [DllImport("MathLibrary.dll")]
         //5.5  - удаление
         //файла, nProcess - номер процесса(0 - 99), вызвавший метод(255 -
@@ -244,3 +226,7 @@ namespace ConnectDLL
         internal static extern int osDeleteFile(int nProcess, char[] fileName);
     }
 }
+
+
+
+
