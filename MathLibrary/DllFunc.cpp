@@ -11,134 +11,134 @@ static string file_name;
 /*------------------------------------------------------------------------*/
 
 /*
-    1. Аппаратные функции - данные функции реализованы с модели
-    операционной системы, их использование обязательно при обращении к
-    виртуальной машине :
+	1. Аппаратные функции - данные функции реализованы с модели
+	операционной системы, их использование обязательно при обращении к
+	виртуальной машине :
 */
 
 // - 1.1 получить размер оперативной памяти(в байтах);
 uint64_t GetMemorySize()
 {
-    statex.dwLength = sizeof(statex); // I misunderstand that
+	statex.dwLength = sizeof(statex); // I misunderstand that
 
-    GlobalMemoryStatusEx(&statex);
-    //cout << "Physical RAM => " << (float)statex.ullTotalPhys / (1024 * 1024 * 1024) << endl;
-    return statex.ullTotalPhys;
-    //return EXIT_SUCCESS;
-    //PULONGLONG TotalMemoryInKilobytes;
-    //GetPhysicallyInstalledSystemMemory(TotalMemoryInKilobytes);
-    //return (int) TotalMemoryInKilobytes;
+	GlobalMemoryStatusEx(&statex);
+	//cout << "Physical RAM => " << (float)statex.ullTotalPhys / (1024 * 1024 * 1024) << endl;
+	return statex.ullTotalPhys;
+	//return EXIT_SUCCESS;
+	//PULONGLONG TotalMemoryInKilobytes;
+	//GetPhysicallyInstalledSystemMemory(TotalMemoryInKilobytes);
+	//return (int) TotalMemoryInKilobytes;
 }
 
 // -1.2 получить размер страницы(в байтах);
 int GetPageSize()
 {
-    return 1024;
+	return 1024;
 }
 
 // -1.3 получить размер диска(в байтах);
 uint64_t GetDiskSize()
 {
-    uint64_t lpTotalNumberOfBytes;
-    GetDiskFreeSpaceEx(NULL, NULL, (PULARGE_INTEGER)&lpTotalNumberOfBytes, NULL);
-    return lpTotalNumberOfBytes;
+	uint64_t lpTotalNumberOfBytes;
+	GetDiskFreeSpaceEx(NULL, NULL, (PULARGE_INTEGER)&lpTotalNumberOfBytes, NULL);
+	return lpTotalNumberOfBytes;
 }
 
 // -1.4 получить размер кластера(в байтах);
 uint64_t GetSectorSize()
 {
-    uint64_t lpSectorsPerCluster;
-    uint64_t lpBytesPerSector;
-    GetDiskFreeSpaceA(NULL, (LPDWORD)&lpSectorsPerCluster, (LPDWORD)&lpBytesPerSector, NULL, NULL);
-    //return ((uint64_t)lpSectorsPerCluster * (uint64_t)lpBytesPerSector);
-    return 512;
+	uint64_t lpSectorsPerCluster;
+	uint64_t lpBytesPerSector;
+	GetDiskFreeSpaceA(NULL, (LPDWORD)&lpSectorsPerCluster, (LPDWORD)&lpBytesPerSector, NULL, NULL);
+	//return ((uint64_t)lpSectorsPerCluster * (uint64_t)lpBytesPerSector);
+	return 512;
 }
 
 string currentDateTime() {
-    time_t t = time(nullptr);
+	time_t t = time(nullptr);
 #pragma warning(disable : 4996)
-    tm* now = localtime(&t);
+	tm* now = localtime(&t);
 #pragma warning(suppress : 4996)
 
-    char buffer[128];
-    strftime(buffer, sizeof(buffer), "%m-%d-%Y %X", now);
-    for (int i = 0; i < sizeof(buffer); i++)
-        if (buffer[i] == ':') buffer[i] = ';';
-    return buffer;
+	char buffer[128];
+	strftime(buffer, sizeof(buffer), "%m-%d-%Y %X", now);
+	for (int i = 0; i < sizeof(buffer); i++)
+		if (buffer[i] == ':') buffer[i] = ';';
+	return buffer;
 }
 // -1.5 записать строку в лог(не более 40К за 500 мс);
 void AddLog(char* s, int size)
 {
-    ofstream out;
+	ofstream out;
 
-    if (firstLog) 
-    {
-        srand(time(NULL));
+	if (firstLog)
+	{
+		srand(time(NULL));
 
-        file_name = "log_";
-        file_name += currentDateTime() + "_" + to_string(rand());
-        file_name += ".txt";
+		file_name = "log_";
+		file_name += currentDateTime() + "_" + to_string(rand());
+		file_name += ".txt";
 
-        out.open(file_name, std::ios_base::app);
+		out.open(file_name, std::ios_base::app);
 
-        firstLog = false;
-    }
-    else if(!firstLog)
-    {
-        out.open(file_name, std::ios_base::app);
-    }
+		firstLog = false;
+	}
+	else if (!firstLog)
+	{
+		out.open(file_name, std::ios_base::app);
+	}
 
-    for (int i = 0; i < size; i++)
-        out << s[i];
-    out << "\n";
+	for (int i = 0; i < size; i++)
+		out << s[i];
+	out << "\n";
 
-    out.close();
-    
-    return;
+	out.close();
+
+	return;
 }
 
 // -1.6 считать байт из памяти по физ.адресу;
-BYTE ReadMemoryByte(int &memPhysAdress)
+BYTE ReadMemoryByte(int& memPhysAdress)
 {
-    return (BYTE)memPhysAdress;
+	return (BYTE)memPhysAdress;
 }
 
 //1.7 - записать байт в память по физ.адресу;
-void WriteMemoryByte(int &memPhysAdress, BYTE value)
+void WriteMemoryByte(int& memPhysAdress, BYTE value)
 {
-    *&memPhysAdress = (int)*&value;
-    return;
+	*&memPhysAdress = (int)*&value;
+	return;
 }
 
 //1.8 - считать из памяти по указанному физ.адресу несколько байт
 //(memPhysAdress - адрес, с которого надо считывать данные, lpBuffer -
 //буфер, в который необходимо перенести указанные данные, count -
 //количество считываемых байт);
-BYTE* ReadMemory(int &memPhysAdress, int count)
+BYTE* ReadMemory(int& memPhysAdress, int count)
 {
-    //ReadProcessMemory();
-    BYTE* lpBuffer = new BYTE[count];
+	//ReadProcessMemory();
+	BYTE* lpBuffer = new BYTE[count];
 
-    for (int i = 0; i < count; i++)
-    {
-        lpBuffer[i] = (BYTE)memPhysAdress;
-        memPhysAdress += sizeof(lpBuffer[i]);
-    }
+	for (int i = 0; i < count; i++)
+	{
+		lpBuffer[i] = (BYTE)memPhysAdress;
+		memPhysAdress += sizeof(lpBuffer[i]);
+	}
 
-    return lpBuffer;
+	return lpBuffer;
 }
 
 //1.9  - записать в памяти из указанного буфера несколько байт
 //(memPhysAdress - адрес, по которому происходит запись, lpBuffer -
 //буфер, из которого переносятся данные, count - количество байт);
-void WriteMemory(int &memPhysAdress, BYTE * lpBuffer, int count)
+void WriteMemory(int& memPhysAdress, BYTE* lpBuffer, int count)
 {
-    for (int i = 0; i < count; i++)
-    {
-        *&memPhysAdress = (int)*&lpBuffer[i];
-        memPhysAdress += sizeof(lpBuffer[i]);
-    }
-    return;
+	for (int i = 0; i < count; i++)
+	{
+		*&memPhysAdress = (int)*&lpBuffer[i];
+		memPhysAdress += sizeof(lpBuffer[i]);
+	}
+	return;
 }
 
 //1.10  - считать кластер
@@ -148,7 +148,7 @@ void WriteMemory(int &memPhysAdress, BYTE * lpBuffer, int count)
 //которого небходимо считать данные;
 void ReadDisk(int memAdress, int nSector)
 {
-    return;
+	return;
 }
 
 //1.11  - записать
@@ -158,26 +158,26 @@ void ReadDisk(int memAdress, int nSector)
 //записываются данные.
 void WriteDisk(int memAdress, int nSector)
 {
-    return;
+	return;
 }
 
 /*
-    2. Функции ОС - прототипы функций, которые необходимо реализовать
-    согласно варианту :
+	2. Функции ОС - прототипы функций, которые необходимо реализовать
+	согласно варианту :
 */
 
 //2.1  - запуск подсистем управления, начальная
 //инициализация подсистем;
 void Start()
 {
-    return;
+	return;
 }
 
 //2.2 - остановка подсистем управления, остановка
 //подсистем управления.
 void Stop()
 {
-    return;
+	return;
 }
 
 /*
@@ -190,20 +190,23 @@ void Stop()
 //процессов
 void GetProcessStatus(BYTE* lpProcStatusBuffer, double* lpProcData)
 {
-    return;
+
+	return;
 }
 
 //3.2  - получить количество блоков;
 int GetPhysMemoryBlockCount()
 {
-    return 0;
+	statex.dwLength = sizeof(statex);
+	GlobalMemoryStatusEx(&statex);
+	return (int)statex.ullTotalPhys;
 }
 
 //3.3  - получить описание
 //блоков, lpBlockList - список описания блоков;
 void GetPhysMemoryBlockList(PHYS_MEMORY_BLOCK* lpBlockList)
 {
-    return;
+	return;
 }
 
 //3.4  - получить
@@ -212,7 +215,7 @@ void GetPhysMemoryBlockList(PHYS_MEMORY_BLOCK* lpBlockList)
 //номером в каталоге), 255 - зарезервировано системой;
 void GetDiskStatus(BYTE* lpStatusBuffer)
 {
-    return;
+	return;
 }
 
 
@@ -222,7 +225,7 @@ void GetDiskStatus(BYTE* lpStatusBuffer)
 //файлов;
 void GetDiskCatalog(char lpFileNames[][20], int* lpFirstSectors, int* lpSizes)
 {
-    return;
+	return;
 }
 
 //3.6 - создать процесс, nData -
@@ -237,13 +240,27 @@ void GetDiskCatalog(char lpFileNames[][20], int* lpFirstSectors, int* lpSizes)
 //номер для созданного процесса;
 int osCreateProcess(int nData)
 {
-    return 0;
+	if (nData == 0) {  // Системный процесс Round Robin
+		return (int)CreateProcess();
+	}
+	else if (nData == 1) {  // Процессы администратора Round Robin
+		return (int)CreateProcess();
+	}
+	else if (nData == 2) {   // Пользовательские процессы Round Robin
+		return (int)CreateProcess();
+	}
+	else if (nData == 3) {   // Фоновые процессы FCFS
+		return (int)CreateProcess();
+	}
+	else {
+		return -1;
+	}
 }
 
 //3.7  - удалить процесс с указанным номером
 void osDeleteProcess(int nProcess)
 {
-    return;
+	return;
 }
 
 /*
@@ -259,7 +276,7 @@ void osDeleteProcess(int nProcess)
 //lpBlockLength - длины блоков аресного пространства;
 void osMakeAddressSpace(int nProcess, int bBlockCount, int* lpBlockLength)
 {
-    return;
+	return;
 }
 
 //4.2  - выполнить трансляцию адреса, nProcess - номер
@@ -272,7 +289,7 @@ void osMakeAddressSpace(int nProcess, int bBlockCount, int* lpBlockLength)
 //оперативной памяти;
 int osTranslateAddress(int nProcess, int nVirtualAdress, int nOperationType)
 {
-    return 0;
+	return 0;
 }
 
 //4.3  - выполнить трансляцию адреса,
@@ -286,7 +303,7 @@ int osTranslateAddress(int nProcess, int nVirtualAdress, int nOperationType)
 
 int osTranslateAddress2(int nProcess, int nSegment, int nOffset, int nOperationType)
 {
-    return 0;
+	return 0;
 }
 
 /*
@@ -304,16 +321,16 @@ int osTranslateAddress2(int nProcess, int nSegment, int nOffset, int nOperationT
 //осуществлять запись, возвращает 1 - если успех - 1 - если ошибка;
 int osWriteFile(int nProcess, char* fileName, int virtMemBuffer, int count, int offset)
 {
-    return 0;
+	return 0;
 }
 
 //5.2  - запись данных в файл из указанного внешнего буфера,
 //fileName - имя файла(не более 20 символов), lpBuffer - адрес
 //буфера с данными, count - длина буфера на запись, возвращает 1 -
 //если успех - 1 - если ошибка;
-int osWriteExternFile(char* fileName, BYTE * lpBuffer, int count)
+int osWriteExternFile(char* fileName, BYTE* lpBuffer, int count)
 {
-    return 0;
+	return 0;
 }
 
 //5.3  - чтение из файла данных в
@@ -326,16 +343,16 @@ int osWriteExternFile(char* fileName, BYTE * lpBuffer, int count)
 //количество прочитанных символов - 1 - если ошибка
 int osReadFile(int nProcess, char* fileName, int virtMemBuffer, int count, int offset)
 {
-    return 0;
+	return 0;
 }
 
 //5.4  - чтение из файла данных в указанный внешний буфер,
 //fileName - имя файла(не более 20 символов), lpBuffer - адрес
 //буфера с данными, count - длина буфера на для данных, возвращает
 //количество прочитанных символов - 1 - если ошибка;
-int osReadExternFile(char* fileName, BYTE * lpBuffer, int count)
+int osReadExternFile(char* fileName, BYTE* lpBuffer, int count)
 {
-    return 0;
+	return 0;
 }
 
 //5.5  - удаление
@@ -344,5 +361,5 @@ int osReadExternFile(char* fileName, BYTE * lpBuffer, int count)
 //1 - если успешно - 1 - если ошибка.
 int osDeleteFile(int nProcess, char* fileName)
 {
-    return 0;
+	return 0;
 }

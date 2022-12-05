@@ -50,11 +50,13 @@ namespace Test_union_c__
 
             //MessageBox.Show(DLL.ReadMemory(ref p, 3)[2].ToString());
             
-            Initialize_DataGrids();
 
             //Process_StatusBar.Items.Add(new Separator());
             //Process_StatusBar.Items.Add("hui");
-            //MessageBox.Show(DLL.GetSectorSize().ToString());
+            MessageBox.Show(DLL.GetPhysMemoryBlockCount().ToString());
+
+
+            Initialize_DataGrids();
         }
 
         private void Initialize_DataGrids()
@@ -117,12 +119,12 @@ namespace Test_union_c__
             //}
             //Process_DataGrid.Items.Add(processes1[0]);
 
-            ProcessStartInfo procInfo = new ProcessStartInfo();
-            // исполняемый файл программы - браузер хром
-            procInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome";
-            // аргументы запуска - адрес интернет-ресурса
-            procInfo.Arguments = "https://metanit.com";
-            Process.Start(procInfo);
+            //ProcessStartInfo procInfo = new ProcessStartInfo();
+            //// исполняемый файл программы - браузер хром
+            //procInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome";
+            //// аргументы запуска - адрес интернет-ресурса
+            //procInfo.Arguments = "https://metanit.com";
+            //Process.Start(procInfo);
 
             var processes = Process.GetProcessesByName("Idle");
             foreach (Process process in processes)
